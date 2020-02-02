@@ -50,7 +50,9 @@ public class Token {
 		ZipatoResponse init = gson.fromJson(rawResponse.getResponse(), ZipatoResponse.class);
 		String token = calculateToken(init.getNonce(), PASSWORD );
 
-		test.HttpResponse rawResponse2 = httpGET("https://my.zipato.com/zipato-web/v2/user/init",
+		test.HttpResponse rawResponse2 = httpGET("https://my.zipato.com/zipato-web/v2/user/login"
+				+ "?username=csanad.farkas90@gmail.com"
+				+ "&token=" + token,
 				rawResponse.getCookies());
 		System.out.println("FINAL" + rawResponse2.getResponse());
 		System.out.println(init.getJsessionid());
@@ -58,7 +60,7 @@ public class Token {
 		ZipatoResponse login = gson.fromJson(rawResponse2.getResponse(), ZipatoResponse.class);
 		System.out.println(login.getJsessionid());
 		test(login.getJsessionid());
-		
+
 //		test("D469835C3D341A2C893B05491BF0D9E0-n1.frontend3");
 		httpPUT("https://my.zipato.com/zipato-web/v2/attributes/d0fbf5f6-b391-48b9-8d80-141182f8d83c/value",
 				rawResponse2.getCookies(), "{\"value\":90}");
@@ -195,8 +197,7 @@ public class Token {
 		String sha1Password = sha1(password);
 		LOGGER.log(Level.INFO, "sha1Password: " + sha1Password);
 		System.err.println(sha1Password);
-		String sha1Nonce = sha1(nonce);
-		String token = sha1(sha1Nonce + sha1Password);
+		String token = sha1(nonce + sha1Password);
 		return token;
 	}
 
